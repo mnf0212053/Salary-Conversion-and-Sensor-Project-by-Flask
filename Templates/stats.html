@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <h1>{{ header_text }}</h1>
+        {% for i in data %}
+        <h3>{{ i['room'] }}</h3>
+        <table>
+            <tr>
+                <th></th>
+                {% for j in i['parameter'] %}
+                <td> {{ j }} </td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th> min </th>
+                {% for j in i['min'] %}
+                <td> {{ j }} </td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th> max </th>
+                {% for j in i['max'] %}
+                <td> {{ j }} </td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th> median </th>
+                {% for j in i['median'] %}
+                <td> {{ j }} </td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th> average </th>
+                {% for j in i['average'] %}
+                <td> {{ j }} </td>
+                {% endfor %}
+            </tr>
+        </table>
+        {% endfor %}
+    </body>
+</html>

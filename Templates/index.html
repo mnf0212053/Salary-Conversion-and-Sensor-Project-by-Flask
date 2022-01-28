@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    </head>
+    <body>
+        <h1>{{ header_text }}</h1>
+        <table>
+            <tr>
+                {% for i in col_list %}
+                <th> {{ i }} </th>
+                {% endfor %}
+            </tr>
+            {% for i in data %}
+            <tr>
+                {% for j in i %}
+                <td> {{ j }} </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

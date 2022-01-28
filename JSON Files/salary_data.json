@@ -1,0 +1,14 @@
+{
+  "array": [
+    { "salaryInIDR": 4.001111510555328e6, "id": 1 },
+    { "salaryInIDR": 4685534.363816402, "id": 2 },
+    { "salaryInIDR": 3013601.6163306856, "id": 3 },
+    { "salaryInIDR": 9.619331420029558e6, "id": 4 },
+    { "salaryInIDR": 8.380696500881106e6, "id": 5 },
+    { "salaryInIDR": 9091824.554498984, "id": 6 },
+    { "salaryInIDR": 6.996573171622309e6, "id": 7 },
+    { "salaryInIDR": 3.910254930004663e6, "id": 8 },
+    { "salaryInIDR": 5.968429287836904e6, "id": 9 },
+    { "salaryInIDR": 5.9648082820075266e6, "id": 10 }
+  ]
+}

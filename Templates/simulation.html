@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>      
+    </head>
+    <body>
+        <button id="start_stop">Start</button>
+        <table style="width: 100%">
+            <tr>
+                <th>Temperature</th>
+                <th>Humidity</th>
+            </tr>
+            <tr>
+                <td style="width: 700px">
+                    <canvas id="Tsimchart" style="width:100%;max-width:700px"></canvas>
+                    <table style="width: 700px; text-align: center">
+                        <tr>
+                            <th>min</th>
+                            <th>max</th>
+                            <th>median</th>
+                            <th>average</th>
+                        </tr>
+                        <tr>
+                            <td id="Tmin">0</td>
+                            <td id="Tmax">0</td>
+                            <td id="Tmedian">0</td>
+                            <td id="Taverage">0</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 700px">
+                    <canvas id="Hsimchart" style="width:100%;max-width:700px"></canvas>
+                    <table style="width: 700px; text-align: center">
+                        <tr>
+                            <th>min</th>
+                            <th>max</th>
+                            <th>median</th>
+                            <th>average</th>
+                        </tr>
+                        <tr>
+                            <td id="Hmin">0</td>
+                            <td id="Hmax">0</td>
+                            <td id="Hmedian">0</td>
+                            <td id="Haverage">0</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <script>
+            var xTValues = [0];
+            var yTValues = [0];
+            var xHValues = [0];
+            var yHValues = [0];
+
+            var is_start = false;
+            var time;
+
+            var Tchrt = new Chart("Tsimchart", {
+            type: "line",
+            data: {
+                labels: xTValues,
+                datasets: [{
+                    backgroundColor: "rgba(0,0,0,0.0)",
+                    borderColor: "rgba(0,0,0,1.0)",
+                    data: yTValues
+                }]
+            },
+            options:{
+                legend: {display: false},
+                scales: {
+                    yAxes: [{ticks: {min: 0, max:4}}],
+                }
+            }
+            });
+
+            var Hchrt = new Chart("Hsimchart", {
+            type: "line",
+            data: {
+                labels: xHValues,
+                datasets: [{
+                    backgroundColor: "rgba(0,0,0,0.0)",
+                    borderColor: "rgba(0,0,0,1.0)",
+                    data: yHValues
+                }]
+            },
+            options:{
+                legend: {display: false},
+                scales: {
+                    yAxes: [{ticks: {min: 0, max:4}}],
+                }
+            }
+            });
+
+            $(document).ready(function() {
+                $("#start_stop").click(start_stop);
+            });
+
+            function start_stop(){
+                if(!is_start){
+                    is_start = true;
+                    $("#start_stop").html("Stop");
+                    time = setInterval(getRequest, 1000);
+                }
+                else {
+                    is_start = false;
+                    $("#start_stop").html("Start");
+                    clearInterval(time)
+                }
+                
+            }
+
+            function getRequest(){
+                $.get("http://localhost:5000/simulation/values", getFunction);
+            }
+
+            function getFunction(chart_data){
+                const max_length = chart_data.maxlength;
+
+                if(xTValues.length > max_length){
+                    xTValues.shift()
+                    yTValues.shift()
+                    xHValues.shift()
+                    yHValues.shift()
+                }
+                xTValues.push(chart_data.temperature.x);
+                yTValues.push(chart_data.temperature.y);
+                xHValues.push(chart_data.humidity.x);
+                yHValues.push(chart_data.humidity.y);
+
+                $("#Tmin").html(chart_data.min.temperature);
+                $("#Tmax").html(chart_data.max.temperature);
+                $("#Tmedian").html(chart_data.median.temperature);
+                $("#Taverage").html(chart_data.average.temperature);
+                $("#Hmin").html(chart_data.min.humidity);
+                $("#Hmax").html(chart_data.max.humidity);
+                $("#Hmedian").html(chart_data.median.humidity);
+                $("#Haverage").html(chart_data.average.humidity);
+
+                new Chart("Tsimchart", {
+                    type: "line",
+                    data: {
+                        labels: xTValues,
+                        datasets: [{
+                            backgroundColor: "rgba(0,0,0,0.0)",
+                            borderColor: "rgba(0,0,0,1.0)",
+                            data: yTValues
+                        }]
+                    },
+                    options:{
+                        animation: {duration: 0},
+                        legend: {display: false},
+                        scales: {
+                            yAxes: [{ticks: {min: 10, max:50}}],
+                        }
+                    }
+                });
+
+                new Chart("Hsimchart", {
+                    type: "line",
+                    data: {
+                        labels: xHValues,
+                        datasets: [{
+                            backgroundColor: "rgba(0,0,0,0.0)",
+                            borderColor: "rgba(0,0,0,1.0)",
+                            data: yHValues
+                        }]
+                    },
+                    options:{
+                        animation: {duration: 0},
+                        legend: {display: false},
+                        scales: {
+                            yAxes: [{ticks: {min: 75, max:100}}],
+                        }
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>
